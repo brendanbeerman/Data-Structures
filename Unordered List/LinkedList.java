@@ -21,12 +21,12 @@ public class LinkedList<T> {
 	public void addToEnd (T item) {
 		Node<T> new_node = new Node<T>(item, null);
 		
-		if (isEmpty()) {
+		if (isEmpty()) { // empty list the new_node becomes the front
 			addToFront(item);
-		} else {
+		} else { // iterate through the list to append the new_node
 			Node<T> current = front;
 			
-			while (current.getNext()!=null) {
+			while (current.getNext()!=null) { // find the last node
 				current = current.getNext();
 			}
 			current.setNext(new_node);
@@ -55,11 +55,11 @@ public class LinkedList<T> {
 		Node<T> current = front;
 		System.out.print("\n");
 		
-		while (curr!=null) {
+		while (current!=null) {
 			if (current.getNext() == null) {
-				System.out.print(curr.getData());
+				System.out.print(current.getData());
 			} else {
-				System.out.print(curr.getData() + " ->");
+				System.out.print(current.getData() + " -> ");
 			}
 			current = current.getNext();
 		}
@@ -70,52 +70,53 @@ public class LinkedList<T> {
 	public T getAt (int index) {
 		Node<T> current = front;
 		
-		if (index < 0 || index >= count) {
+		if (index < 0 || index >= count) { // entered index does not exist
 			System.out.println("Error. Index out of bounds");
-		} else {
+			System.exit(0);
+		} else { // gets the node at the index
 			for (int i = 0; i < index; i++) {
 				current = current.getNext();
 			}		
 		}
 		
-		if (current != null) {
+		if (current != null) { // returns the data
 			return current.getData();
-		} else {
+		} else { // returns null if there was no data
 			return null;
 		}
 	}
 	
 	// inserts an item at a given index
 	public void insertAt (T item, int index) {
-		if (index < 0 || index > count) {
+		if (index < 0 || index > count) { // exits if index is out of bounds
 			System.out.println("Can't insert. Index out of bounds.");
 			System.exit(0);
-		} else {
-			if (index==0) {
-				add(item);
+		} else { // can add the item
+			if (index == 0) {
+				addToFront(item);
 				return;
 			}
 			Node<T> previous = front;
 			
-			for (int i = 0; i < index-1; i++) {
+			for (int i = 0; i < index-1; i++) { // to find the place
 				previous = previous.getNext();
 			}
-			Node<T> new_node = new Node<T>(item, previous.getNext());
-			previous.setNext(new_node);
+			Node<T> new_node = new Node<T>(item, previous.getNext()); // appends the rest of the list to the new node
+			previous.setNext(new_node); // appends the new node to the first part of the list
 			count++;
 		}
 	}
 	
 	// resets the data of a node at a given index
 	public void setAt (T item, int index) {
-		if (index < 0 || index >= count) {
+		if (index < 0 || index >= count) { // exits if the node would not exist
 			System.out.println("Can't set. Index out of bounds");
 			System.exit(0);
 		}
 		else {
 			Node<T> current = front;
 			
-			for (int i = 0; i < index; i++) {
+			for (int i = 0; i < index; i++) { // finding the node
 				current = current.getNext();
 			}	
 			current.setData(item);
@@ -138,20 +139,20 @@ public class LinkedList<T> {
 	// removes the node at a given index and returns the data
 	public T removeAt (int index) {
 		T result = null;
-		if (index < 0 || index >= count) {
+		if (index < 0 || index >= count) { // exits if the index is not there
 			System.out.println("Can't remove. Index out of bounds");
 			System.exit(0);
-		} else {
-			if (index == 0) {
+		} else { 
+			if (index == 0) { // sets the new front node
 				result = front.getData();
 				front = front.getNext();
-			} else {
+			} else {  // iterates through 
 				Node<T> previous = front;
-				for (int i = 0; i < index-1; i++) {
+				for (int i = 0; i < index-1; i++) { // finds the node at the index
 					previous = previous.getNext();
 				}	
-				result = previous.getNext().getData();
-				previous.setNext(previous.getNext().getNext());
+				result = previous.getNext().getData(); // the removed element
+				previous.setNext(previous.getNext().getNext()); // sets the previous node's next node to be the removed's next node
 					
 			}
 			count--;
@@ -162,10 +163,10 @@ public class LinkedList<T> {
 	// removes the node containing the first occurrence of a given item
 	public void remove (T item) {
 		int i = indexOf(item);
-		if (i==-1) {
+		if (i == -1) { // exits if the item does not exist
 			System.out.println("No such item");
 			System.exit(0);
-		} else {
+		} else { // removes the item
 			removeAt(i);
 		}	
 	}
@@ -175,54 +176,29 @@ public class LinkedList<T> {
 	 * Does the removal in one scan (O(n))
 	*/
 	public void removeAll (T item) {
-		Node<T> curr=front, prev=null;
+		Node<T> current = front, previous = null;
 		
-		while (curr!=null)
-		{
-			if (front.getData().equals(item))
-			{
+		while (current != null) {
+			if (front.getData().equals(item)) { // checks the first node of the list
 				front = front.getNext();
-				curr = curr.getNext();
+				current = current.getNext();
 				count--;
-			}
-			else if (curr == front)
-			{
-				prev = curr;
-				curr = curr.getNext();
-			}
-			else
-			{
-				if (curr!=null)
-				{
-					if (curr.getData().equals(item))
-					{
-						prev.setNext(curr.getNext());
-						curr= prev.getNext();
+			} else if (current == front) { // iterates to the next set of nodes
+				previous = current;
+				current = current.getNext();
+			} else { //
+				if (current != null) { // 
+					if (current.getData().equals(item)) { // removes the node if it is a match
+						previous.setNext(current.getNext());
+						current= previous.getNext();
 						count--;
-					}
-					else
-					{
-					prev = curr;
-					curr = curr.getNext();
+					} else { // iterates to next set of nodes
+						previous = current;
+						current = current.getNext();
 					}
 				}
 			}
 		}
-	}
-	
-   //adds item to the end of the linked list
-   public void addToEnd (T item) {
-      Node<T> itemnode = new Node<T>(item, null);
-      if (isEmpty()) {
-         addFront(item);
-      } else {
-         Node<T> curr = front;
-         while (curr.getNext()!=null) {
-            curr= curr.getNext();
-         }
-         curr.setNext(itemnode);
-      }
-      count++;
-   }   
+	}  
    
 }
